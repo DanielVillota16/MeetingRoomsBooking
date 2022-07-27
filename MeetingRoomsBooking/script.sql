@@ -1,60 +1,60 @@
-﻿CREATE TABLE [Employees] (
-    [Id] int NOT NULL IDENTITY,
-    [FullName] nvarchar(30) NOT NULL,
-    [Position] nvarchar(30) NOT NULL,
-    CONSTRAINT [PK_Employees] PRIMARY KEY ([Id])
+﻿CREATE TABLE [EMPLEADO] (
+    [ID] int NOT NULL IDENTITY,
+    [NOMBRE_COMPLETO] nvarchar(30) NOT NULL,
+    [CARGO] nvarchar(30) NOT NULL,
+    CONSTRAINT [PK_EMPLEADO] PRIMARY KEY ([ID])
 );
 GO
 
 
-CREATE TABLE [Rooms] (
-    [Id] int NOT NULL IDENTITY,
-    [Name] nvarchar(80) NOT NULL,
-    [Description] nvarchar(300) NULL,
-    [Capacity] int NOT NULL,
-    [Available] bit NOT NULL,
-    CONSTRAINT [PK_Rooms] PRIMARY KEY ([Id])
+CREATE TABLE [SALA] (
+    [ID] int NOT NULL IDENTITY,
+    [NOMBRE] nvarchar(80) NOT NULL,
+    [DESCRIPCION] nvarchar(300) NULL,
+    [CAPACIDAD] int NOT NULL,
+    [HABILITADA] bit NOT NULL,
+    CONSTRAINT [PK_SALA] PRIMARY KEY ([ID])
 );
 GO
 
 
-CREATE TABLE [Reservations] (
-    [Id] int NOT NULL IDENTITY,
-    [ReservationDate] nvarchar(80) NOT NULL,
-    [ReservedById] int NULL,
-    [RoomId] int NOT NULL,
-    CONSTRAINT [PK_Reservations] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Reservations_Employees_ReservedById] FOREIGN KEY ([ReservedById]) REFERENCES [Employees] ([Id]),
-    CONSTRAINT [FK_Reservations_Rooms_RoomId] FOREIGN KEY ([RoomId]) REFERENCES [Rooms] ([Id]) ON DELETE CASCADE
+CREATE TABLE [RESERVA] (
+    [ID] int NOT NULL IDENTITY,
+    [FECHA_HORA] nvarchar(80) NOT NULL,
+    [RESERVADO_POR] int NOT NULL,
+    [SALA_ID] int NOT NULL,
+    CONSTRAINT [PK_RESERVA] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_RESERVA_EMPLEADO_RESERVADO_POR] FOREIGN KEY ([RESERVADO_POR]) REFERENCES [EMPLEADO] ([ID]) ON DELETE CASCADE,
+    CONSTRAINT [FK_RESERVA_SALA_SALA_ID] FOREIGN KEY ([SALA_ID]) REFERENCES [SALA] ([ID]) ON DELETE CASCADE
 );
 GO
 
 
-CREATE TABLE [Assistants] (
-    [Id] int NOT NULL IDENTITY,
-    [ReservationId] int NOT NULL,
-    [EmployeeId] int NOT NULL,
-    [Assisted] bit NOT NULL,
-    CONSTRAINT [PK_Assistants] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Assistants_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Assistants_Reservations_ReservationId] FOREIGN KEY ([ReservationId]) REFERENCES [Reservations] ([Id]) ON DELETE CASCADE
+CREATE TABLE [ASISTENTES] (
+    [ID] int NOT NULL IDENTITY,
+    [RESERVA_ID] int NULL,
+    [ASISTENTE_ID] int NOT NULL,
+    [ASISTIO] bit NOT NULL,
+    CONSTRAINT [PK_ASISTENTES] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_ASISTENTES_EMPLEADO_ASISTENTE_ID] FOREIGN KEY ([ASISTENTE_ID]) REFERENCES [EMPLEADO] ([ID]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ASISTENTES_RESERVA_RESERVA_ID] FOREIGN KEY ([RESERVA_ID]) REFERENCES [RESERVA] ([ID])
 );
 GO
 
 
-CREATE INDEX [IX_Assistants_EmployeeId] ON [Assistants] ([EmployeeId]);
+CREATE INDEX [IX_ASISTENTES_ASISTENTE_ID] ON [ASISTENTES] ([ASISTENTE_ID]);
 GO
 
 
-CREATE INDEX [IX_Assistants_ReservationId] ON [Assistants] ([ReservationId]);
+CREATE INDEX [IX_ASISTENTES_RESERVA_ID] ON [ASISTENTES] ([RESERVA_ID]);
 GO
 
 
-CREATE INDEX [IX_Reservations_ReservedById] ON [Reservations] ([ReservedById]);
+CREATE INDEX [IX_RESERVA_RESERVADO_POR] ON [RESERVA] ([RESERVADO_POR]);
 GO
 
 
-CREATE INDEX [IX_Reservations_RoomId] ON [Reservations] ([RoomId]);
+CREATE INDEX [IX_RESERVA_SALA_ID] ON [RESERVA] ([SALA_ID]);
 GO
 
 
